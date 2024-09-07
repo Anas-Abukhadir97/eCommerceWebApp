@@ -1,3 +1,6 @@
+using eCommerceWebApp.Date;
+using Microsoft.EntityFrameworkCore;
+
 namespace eCommerceWebApp
 {
     public class Program
@@ -7,7 +10,11 @@ namespace eCommerceWebApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<clsAppDbContext>(options => options.UseSqlServer(
+                builder.Configuration.GetConnectionString("DefaultConnectionStrings")));
+
             builder.Services.AddControllersWithViews();
+
 
             var app = builder.Build();
 
@@ -30,7 +37,10 @@ namespace eCommerceWebApp
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+            AppDbInitializer.Seed(app);
+
             app.Run();
+
         }
     }
 }
